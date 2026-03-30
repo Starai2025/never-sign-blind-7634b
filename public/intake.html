@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Your Subcontract — Never Sign Blind™</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">NEVER SIGN BLIND<span>™</span></a>
+    <a href="/" style="color:var(--gray-400);font-size:0.82rem;text-decoration:none;">← Back to home</a>
+  </div>
+</nav>
+
+<div style="max-width:1000px;margin:0 auto;padding:48px 20px;">
+  <div style="display:grid;grid-template-columns:3fr 2fr;gap:40px;align-items:start;">
+
+    <!-- LEFT: Form -->
+    <div>
+      <span class="teal-line"></span>
+      <h1 class="display" style="font-size:clamp(2rem,4vw,2.8rem);margin-bottom:8px;">Submit Your Subcontract</h1>
+      <p style="color:var(--gray-600);margin-bottom:32px;">Fill out the form below and upload your subcontract. We'll review it and get you a decision before your deadline.</p>
+
+      <!-- Step progress -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:32px;">
+        <div style="width:28px;height:28px;background:var(--teal-500);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">1</div>
+        <div style="flex:1;height:1px;background:var(--gray-100);"></div>
+        <div style="width:28px;height:28px;background:var(--gray-100);color:var(--gray-400);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">2</div>
+        <div style="flex:1;height:1px;background:var(--gray-100);"></div>
+        <div style="width:28px;height:28px;background:var(--gray-100);color:var(--gray-400);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">3</div>
+        <span style="margin-left:10px;font-size:0.75rem;color:var(--gray-400);">Step 1 of 3: Your Info</span>
+      </div>
+
+      <div id="alert-success" class="alert alert-success">✓ Submitted successfully! Redirecting...</div>
+      <div id="alert-error" class="alert alert-error">Something went wrong. Please try again or email us directly.</div>
+
+      <form id="intake-form">
+
+        <!-- Tier selection -->
+        <div class="form-group">
+          <label class="form-label">Choose Your Review <span style="color:var(--teal-500);">*</span></label>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label id="tier-quick" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1.5px solid var(--gray-100);border-radius:4px;cursor:pointer;transition:border-color 0.15s;" onclick="selectTier('quick')">
+              <input type="radio" name="tier" value="quick" style="accent-color:var(--teal-500);">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-weight:700;">Quick Clause Check</span>
+                  <span style="font-weight:800;color:var(--teal-500);">$99</span>
+                </div>
+                <div style="color:var(--gray-400);font-size:0.78rem;margin-top:2px;">Top 3 money traps · Same-day</div>
+              </div>
+            </label>
+            <label id="tier-full" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--teal-50);border:1.5px solid var(--teal-500);border-radius:4px;cursor:pointer;transition:border-color 0.15s;" onclick="selectTier('full')">
+              <input type="radio" name="tier" value="full" checked style="accent-color:var(--teal-500);">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-weight:700;">Never Sign Blind™ Review</span>
+                  <span style="font-weight:800;color:var(--teal-500);">$299</span>
+                  <span class="badge badge-teal" style="font-size:0.62rem;">BEST VALUE</span>
+                </div>
+                <div style="color:var(--gray-600);font-size:0.78rem;margin-top:2px;">Full review · Pushback Script™ · Revision Recheck™</div>
+              </div>
+            </label>
+            <label id="tier-rush" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1.5px solid var(--gray-100);border-radius:4px;cursor:pointer;transition:border-color 0.15s;" onclick="selectTier('rush')">
+              <input type="radio" name="tier" value="rush" style="accent-color:var(--teal-500);">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-weight:700;">Rush Review</span>
+                  <span style="font-weight:800;color:var(--orange-500);">$499</span>
+                  <span class="badge badge-orange" style="font-size:0.62rem;">3 HRS</span>
+                </div>
+                <div style="color:var(--gray-400);font-size:0.78rem;margin-top:2px;">Everything in full review · Priority handling</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Contact fields -->
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Your Name <span style="color:var(--teal-500);">*</span></label>
+            <input type="text" name="name" class="form-input" placeholder="Mike Johnson" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company Name <span style="color:var(--teal-500);">*</span></label>
+            <input type="text" name="company" class="form-input" placeholder="Johnson Paving Co." required />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Email Address <span style="color:var(--teal-500);">*</span></label>
+            <input type="email" name="email" class="form-input" placeholder="mike@johnsonpaving.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone <span style="color:var(--gray-400);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <input type="tel" name="phone" class="form-input" placeholder="(555) 800-1200" />
+          </div>
+        </div>
+
+        <!-- Deadline -->
+        <div class="form-group">
+          <label class="form-label">When do you need to sign? <span style="color:var(--teal-500);">*</span></label>
+          <input type="date" name="deadline" class="form-input" required />
+          <div class="form-hint">If your deadline is today or tomorrow, choose Rush Review above.</div>
+        </div>
+
+        <!-- Context -->
+        <div class="form-group">
+          <label class="form-label">Any context we should know? <span style="color:var(--gray-400);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <textarea name="context" class="form-input" rows="3" placeholder="e.g. 'DOT paving sub, concerned about retainage and backcharge sections.'" style="resize:vertical;"></textarea>
+        </div>
+
+        <!-- File upload -->
+        <div class="form-group">
+          <label class="form-label">Upload the Subcontract <span style="color:var(--teal-500);">*</span></label>
+          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
+            ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+            <div style="font-size:2rem;margin-bottom:8px;opacity:0.4;">📄</div>
+            <div style="font-weight:600;margin-bottom:4px;" id="upload-label">Drop your subcontract here, or click to browse</div>
+            <div style="color:var(--gray-400);font-size:0.78rem;">PDF, Word (.doc/.docx), or image · Max 6MB</div>
+            <input type="file" id="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileSelect(event)" />
+          </div>
+          <div class="form-hint">Your document is kept strictly confidential and only used for your review.</div>
+        </div>
+
+        <!-- Hidden stripe session id (populated from URL on Stripe redirect) -->
+        <input type="hidden" name="stripe_session_id" id="stripe_session_id" value="" />
+
+        <!-- Submit -->
+        <button type="submit" id="submit-btn" class="btn-primary btn-full btn-lg" style="font-size:1rem;">
+          Submit My Subcontract for Review →
+        </button>
+        <p style="color:var(--gray-400);font-size:0.72rem;text-align:center;margin-top:10px;">Clear Before You Sign Guarantee™ · Confidential · Not legal advice</p>
+      </form>
+    </div>
+
+    <!-- RIGHT: Trust sidebar -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <div class="card" style="padding:22px;">
+        <div class="display" style="color:var(--navy-900);font-size:1rem;letter-spacing:0.05em;margin-bottom:16px;">WHAT HAPPENS NEXT</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:26px;height:26px;min-width:26px;background:var(--teal-500);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.72rem;">1</div>
+            <div><div style="font-weight:600;font-size:0.88rem;">We receive your subcontract</div><div style="color:var(--gray-400);font-size:0.78rem;margin-top:2px;">Confirmation email sent immediately</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:26px;height:26px;min-width:26px;background:var(--teal-500);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.72rem;">2</div>
+            <div><div style="font-weight:600;font-size:0.88rem;">We run the CashTrap Scan™</div><div style="color:var(--gray-400);font-size:0.78rem;margin-top:2px;">Every payment, retainage, and risk clause reviewed</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:26px;height:26px;min-width:26px;background:var(--teal-500);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.72rem;">3</div>
+            <div><div style="font-weight:600;font-size:0.88rem;">You get the full review</div><div style="color:var(--gray-400);font-size:0.78rem;margin-top:2px;">Score · Pushback Script™ · Deadline Snapshot™ · PM Handoff Sheet™</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guarantee-box" style="padding:18px 20px;text-align:left;">
+        <div class="display" style="color:var(--teal-500);font-size:0.95rem;letter-spacing:0.05em;margin-bottom:6px;">CLEAR BEFORE YOU SIGN GUARANTEE™</div>
+        <p style="color:var(--gray-600);font-size:0.82rem;line-height:1.6;margin:0;">If we don't deliver a clear sign/negotiate/walk decision before your deadline, we redo it free.</p>
+      </div>
+
+      <div class="card" style="padding:18px 20px;">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:4px;">⏰ Daily Cutoff: 2 PM</div>
+        <p style="color:var(--gray-400);font-size:0.78rem;margin:0;">Submit before 2 PM and your review is delivered the same day by 5 PM. Rush: 3 hours.</p>
+      </div>
+
+      <div class="card" style="padding:18px 20px;">
+        <div class="display" style="color:var(--navy-900);font-size:0.95rem;letter-spacing:0.05em;margin-bottom:10px;">FULL REVIEW INCLUDES</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;font-size:0.83rem;">
+          <li style="display:flex;align-items:center;gap:6px;"><span style="color:var(--teal-500);">✓</span> CashTrap Scan™</li>
+          <li style="display:flex;align-items:center;gap:6px;"><span style="color:var(--teal-500);">✓</span> Sign-with-Confidence Score™</li>
+          <li style="display:flex;align-items:center;gap:6px;"><span style="color:var(--teal-500);">✓</span> Pushback Script™</li>
+          <li style="display:flex;align-items:center;gap:6px;"><span style="color:var(--teal-500);">✓</span> Deadline Snapshot™</li>
+          <li style="display:flex;align-items:center;gap:6px;"><span style="color:var(--teal-500);">✓</span> PM Handoff Sheet™</li>
+          <li style="display:flex;align-items:center;gap:6px;"><span style="color:var(--teal-500);">✓</span> 1 Revision Recheck™</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">NEVER SIGN BLIND<span>™</span></div>
+    <div style="color:var(--gray-400);font-size:0.72rem;">Not legal advice. Not a law firm. © 2025 Never Sign Blind™</div>
+  </div>
+</footer>
+
+<script>
+  // Pre-select tier and session from URL params
+  const params = new URLSearchParams(window.location.search)
+  const tierParam = params.get('tier')
+  const sessionParam = params.get('session')
+  if (tierParam) selectTier(tierParam)
+  if (sessionParam) document.getElementById('stripe_session_id').value = sessionParam
+
+  function selectTier(tier) {
+    const tiers = ['quick', 'full', 'rush']
+    tiers.forEach(t => {
+      const el = document.getElementById('tier-' + t)
+      const radio = el.querySelector('input[type="radio"]')
+      if (t === tier) {
+        el.style.borderColor = 'var(--teal-500)'
+        el.style.background = 'var(--teal-50)'
+        radio.checked = true
+      } else {
+        el.style.borderColor = 'var(--gray-100)'
+        el.style.background = '#fff'
+        radio.checked = false
+      }
+    })
+    // Rush tier gets orange accent
+    if (tier === 'rush') {
+      document.getElementById('tier-rush').style.borderColor = 'var(--orange-500)'
+    }
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault()
+    document.getElementById('upload-zone').classList.add('dragging')
+  }
+  function handleDragLeave() {
+    document.getElementById('upload-zone').classList.remove('dragging')
+  }
+  function handleDrop(e) {
+    e.preventDefault()
+    document.getElementById('upload-zone').classList.remove('dragging')
+    const file = e.dataTransfer.files[0]
+    if (file) showFile(file)
+  }
+  function handleFileSelect(e) {
+    const file = e.target.files[0]
+    if (file) showFile(file)
+  }
+  function showFile(file) {
+    document.getElementById('upload-label').textContent = '✓ ' + file.name + ' (' + (file.size/1024/1024).toFixed(1) + ' MB)'
+    document.getElementById('upload-zone').classList.add('has-file')
+  }
+
+  document.getElementById('intake-form').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const btn = document.getElementById('submit-btn')
+    btn.innerHTML = '<span class="spinner"></span> Submitting...'
+    btn.disabled = true
+
+    const form = e.target
+    const formData = new FormData(form)
+    const fileInput = document.getElementById('file-input')
+    if (fileInput.files[0]) formData.set('file', fileInput.files[0])
+
+    try {
+      const res = await fetch('/api/submit-review', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        document.getElementById('alert-success').classList.add('visible')
+        setTimeout(() => window.location.href = 'thank-you-review.html', 1500)
+      } else {
+        throw new Error(data.error || 'Submission failed')
+      }
+    } catch (err) {
+      document.getElementById('alert-error').textContent = err.message || 'Something went wrong. Please try again.'
+      document.getElementById('alert-error').classList.add('visible')
+      btn.innerHTML = 'Submit My Subcontract for Review →'
+      btn.disabled = false
+    }
+  })
+</script>
+</body>
+</html>

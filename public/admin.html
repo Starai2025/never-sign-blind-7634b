@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Never Sign Blind™</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: var(--gray-50); }
+    .admin-header { background: var(--navy-900); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    .dot-green { background: #4ADE80; }
+    .dot-yellow { background: #FCD34D; }
+    .dot-gray { background: var(--gray-400); }
+    .dot-red { background: #F87171; }
+    .editable { cursor: pointer; border-bottom: 1px dashed var(--gray-200); }
+    #prompt-editor { width: 100%; height: 320px; font-family: monospace; font-size: 0.8rem; padding: 12px; border: 1.5px solid var(--gray-200); border-radius: 4px; resize: vertical; line-height: 1.6; }
+    .stat-card { background: #fff; border: 1px solid var(--gray-100); border-radius: 4px; padding: 20px 24px; }
+    .stat-num { font-family: var(--font-display); font-size: 2.5rem; color: var(--navy-900); line-height: 1; }
+    .action-link { color: var(--teal-500); text-decoration: none; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+    .action-link:hover { text-decoration: underline; }
+    .outreach-input { padding: 6px 10px; border: 1px solid var(--gray-200); border-radius: 3px; font-size: 0.8rem; font-family: var(--font-body); width: 100%; }
+    select.outreach-input { cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<!-- Admin Header -->
+<div class="admin-header">
+  <div style="display:flex;align-items:center;gap:16px;">
+    <a href="/" class="nav-logo" style="font-size:1.2rem;">NEVER SIGN BLIND<span>™</span></a>
+    <span style="color:rgba(255,255,255,0.3);">|</span>
+    <span style="color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Admin Dashboard</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span id="auth-status" style="color:var(--gray-400);font-size:0.78rem;">Not authenticated</span>
+    <input type="password" id="admin-token-input" placeholder="Admin token" style="padding:6px 12px;font-size:0.78rem;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:#fff;border-radius:4px;width:200px;" />
+    <button onclick="authenticate()" class="btn-primary btn-sm">Login</button>
+  </div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:24px 20px;" id="dashboard" style="display:none;">
+
+  <!-- Stats row -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;" id="stats-row">
+    <div class="stat-card"><div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);margin-bottom:6px;">Total Reviews</div><div class="stat-num" id="stat-total">—</div></div>
+    <div class="stat-card"><div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);margin-bottom:6px;">Paid</div><div class="stat-num" id="stat-paid">—</div></div>
+    <div class="stat-card"><div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);margin-bottom:6px;">Delivered</div><div class="stat-num" id="stat-delivered">—</div></div>
+    <div class="stat-card"><div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);margin-bottom:6px;">Leads</div><div class="stat-num" id="stat-leads">—</div></div>
+    <div class="stat-card"><div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);margin-bottom:6px;">Revenue</div><div class="stat-num" id="stat-revenue">—</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="background:#fff;border:1px solid var(--gray-100);border-radius:4px;overflow:hidden;">
+    <div class="tabs" style="padding:0 20px;margin:0;border-bottom:1px solid var(--gray-100);">
+      <button class="tab-btn active" onclick="switchTab('reviews')">Reviews</button>
+      <button class="tab-btn" onclick="switchTab('leads')">Leads</button>
+      <button class="tab-btn" onclick="switchTab('outreach')">Outreach Tracker</button>
+      <button class="tab-btn" onclick="switchTab('config')">AI Config</button>
+    </div>
+
+    <div style="padding:20px;">
+
+      <!-- REVIEWS TAB -->
+      <div id="tab-reviews" class="tab-panel active">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="margin:0;font-size:1rem;">Review Submissions</h3>
+          <button onclick="loadReviews()" class="btn-outline btn-sm">↻ Refresh</button>
+        </div>
+        <div id="reviews-loading" style="color:var(--gray-400);padding:20px;text-align:center;">Loading...</div>
+        <div id="reviews-table" style="display:none;overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Client</th><th>Company</th><th>Tier</th><th>Price</th>
+                <th>Paid</th><th>Status</th><th>Deadline</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reviews-tbody"></tbody>
+          </table>
+        </div>
+        <div id="reviews-empty" style="display:none;text-align:center;padding:40px;color:var(--gray-400);">No reviews yet. They'll appear here when submitted.</div>
+      </div>
+
+      <!-- LEADS TAB -->
+      <div id="tab-leads" class="tab-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="margin:0;font-size:1rem;">Checklist Leads</h3>
+          <button onclick="loadLeads()" class="btn-outline btn-sm">↻ Refresh</button>
+        </div>
+        <div id="leads-loading" style="color:var(--gray-400);padding:20px;text-align:center;">Loading...</div>
+        <div id="leads-table" style="display:none;overflow-x:auto;">
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Company</th><th>Email</th><th>Sequence Step</th><th>Date</th><th>Converted</th></tr></thead>
+            <tbody id="leads-tbody"></tbody>
+          </table>
+        </div>
+        <div id="leads-empty" style="display:none;text-align:center;padding:40px;color:var(--gray-400);">No leads yet.</div>
+      </div>
+
+      <!-- OUTREACH TAB -->
+      <div id="tab-outreach" class="tab-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="margin:0;font-size:1rem;">Outreach Tracker</h3>
+          <button onclick="addOutreachRow()" class="btn-primary btn-sm">+ Add Contact</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="outreach-table">
+            <thead>
+              <tr>
+                <th>Company</th><th>Contact</th><th>Title</th><th>Email</th>
+                <th>Channel</th><th>Reply</th><th>Sample</th><th>Sold</th><th>Testimonial</th><th>Notes</th><th>Save</th>
+              </tr>
+            </thead>
+            <tbody id="outreach-tbody">
+              <tr><td colspan="11" style="text-align:center;color:var(--gray-400);padding:20px;">Loading outreach records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CONFIG TAB -->
+      <div id="tab-config" class="tab-panel">
+        <h3 style="margin:0 0 16px;font-size:1rem;">AI Review System Prompt</h3>
+        <p style="color:var(--gray-600);font-size:0.85rem;margin-bottom:16px;">This is the instruction set Claude uses to generate review drafts. Edit here and save — changes take effect on the next review.</p>
+        <div id="config-loading" style="color:var(--gray-400);padding:20px;text-align:center;">Loading config...</div>
+        <div id="config-editor" style="display:none;">
+          <textarea id="prompt-editor" placeholder="Loading system prompt..."></textarea>
+          <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+            <button onclick="savePrompt()" class="btn-primary btn-sm">Save Prompt</button>
+            <span id="save-status" style="font-size:0.78rem;color:var(--gray-400);"></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Review Detail Modal -->
+<div id="review-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;overflow-y:auto;">
+  <div style="max-width:680px;margin:40px auto;background:#fff;border-radius:4px;overflow:hidden;">
+    <div style="background:var(--navy-900);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+      <div class="display" style="color:#fff;font-size:1.1rem;">Review Details</div>
+      <button onclick="closeModal()" style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1.4rem;">×</button>
+    </div>
+    <div id="modal-content" style="padding:24px;"></div>
+  </div>
+</div>
+
+<script>
+let ADMIN_TOKEN = ''
+let currentOutreach = []
+
+function authenticate() {
+  ADMIN_TOKEN = document.getElementById('admin-token-input').value.trim()
+  if (!ADMIN_TOKEN) return alert('Please enter admin token')
+  document.getElementById('auth-status').textContent = 'Authenticated ✓'
+  document.getElementById('auth-status').style.color = '#4ADE80'
+  document.getElementById('dashboard').style.display = 'block'
+  loadStats(); loadReviews(); loadLeads(); loadOutreach()
+}
+
+async function apiGet(view, params = '') {
+  const res = await fetch(`/api/admin?view=${view}&token=${ADMIN_TOKEN}${params}`)
+  if (!res.ok) throw new Error('API error')
+  return res.json()
+}
+async function apiPost(action, body) {
+  const res = await fetch(`/api/admin?action=${action}&token=${ADMIN_TOKEN}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  })
+  return res.json()
+}
+
+async function loadStats() {
+  try {
+    const s = await apiGet('stats')
+    document.getElementById('stat-total').textContent = s.total_reviews
+    document.getElementById('stat-paid').textContent = s.paid_reviews
+    document.getElementById('stat-delivered').textContent = s.delivered_reviews
+    document.getElementById('stat-leads').textContent = s.total_leads
+    document.getElementById('stat-revenue').textContent = '$' + s.revenue.toLocaleString()
+  } catch(e) { console.error('Stats load failed', e) }
+}
+
+async function loadReviews() {
+  document.getElementById('reviews-loading').style.display = 'block'
+  document.getElementById('reviews-table').style.display = 'none'
+  document.getElementById('reviews-empty').style.display = 'none'
+  try {
+    const reviews = await apiGet('reviews')
+    document.getElementById('reviews-loading').style.display = 'none'
+    if (!reviews.length) { document.getElementById('reviews-empty').style.display = 'block'; return }
+    document.getElementById('reviews-table').style.display = 'block'
+    const statusColors = { pending:'gray', generating:'yellow', generated:'teal', approved:'green', delivered:'green', error:'red' }
+    document.getElementById('reviews-tbody').innerHTML = reviews.map(r => `
+      <tr>
+        <td style="font-weight:600;">${r.name}</td>
+        <td>${r.company}</td>
+        <td><span class="badge badge-navy" style="font-size:0.65rem;">${r.tier.toUpperCase()}</span></td>
+        <td style="font-weight:700;">$${r.price}</td>
+        <td><span class="status-dot dot-${r.paid ? 'green' : 'gray'}"></span>${r.paid ? 'Paid' : 'Pending'}</td>
+        <td><span class="badge badge-${statusColors[r.draft_status] || 'gray'}" style="font-size:0.65rem;">${r.draft_status}</span></td>
+        <td style="font-size:0.82rem;">${r.deadline}</td>
+        <td style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a class="action-link" onclick="viewReview('${r.id}')">View</a>
+          ${r.draft_status === 'generated' ? `<a class="action-link" style="color:var(--orange-500);" href="/api/approve-review?id=${r.id}&token=${ADMIN_TOKEN}" target="_blank">Approve</a>` : ''}
+        </td>
+      </tr>`).join('')
+  } catch(e) { document.getElementById('reviews-loading').textContent = 'Failed to load reviews.' }
+}
+
+async function loadLeads() {
+  document.getElementById('leads-loading').style.display = 'block'
+  try {
+    const leads = await apiGet('leads')
+    document.getElementById('leads-loading').style.display = 'none'
+    if (!leads.length) { document.getElementById('leads-empty').style.display = 'block'; return }
+    document.getElementById('leads-table').style.display = 'block'
+    const stepLabels = ['', 'Checklist sent', 'Sample sent', 'Offer sent', 'Complete']
+    document.getElementById('leads-tbody').innerHTML = leads.map(l => `
+      <tr>
+        <td style="font-weight:600;">${l.name}</td>
+        <td>${l.company || '—'}</td>
+        <td>${l.email}</td>
+        <td><span class="badge badge-teal" style="font-size:0.65rem;">${stepLabels[l.sequence_step] || 'Step ' + l.sequence_step}</span></td>
+        <td style="font-size:0.82rem;">${new Date(l.created_at).toLocaleDateString()}</td>
+        <td><span class="status-dot dot-${l.converted ? 'green' : 'gray'}"></span>${l.converted ? '✓ Buyer' : 'Lead'}</td>
+      </tr>`).join('')
+  } catch(e) { document.getElementById('leads-loading').textContent = 'Failed to load leads.' }
+}
+
+async function loadOutreach() {
+  try {
+    const contacts = await apiGet('outreach')
+    currentOutreach = contacts
+    renderOutreachTable(contacts)
+  } catch(e) { console.error('Outreach load failed') }
+}
+
+function renderOutreachTable(contacts) {
+  const tbody = document.getElementById('outreach-tbody')
+  if (!contacts.length) {
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--gray-400);padding:20px;">No outreach tracked yet. Add contacts above.</td></tr>'
+    return
+  }
+  tbody.innerHTML = contacts.map(c => outreachRow(c)).join('')
+}
+
+function outreachRow(c = {}) {
+  const id = c.id || 'new-' + Date.now()
+  const replyOptions = ['none','replied','not-interested','sample-requested','closed'].map(v => `<option value="${v}" ${c.reply_status===v?'selected':''}>${v}</option>`).join('')
+  return `<tr id="row-${id}">
+    <td><input class="outreach-input" data-field="company" value="${c.company||''}" placeholder="ABC Paving"></td>
+    <td><input class="outreach-input" data-field="contact_name" value="${c.contact_name||''}" placeholder="John Smith"></td>
+    <td><input class="outreach-input" data-field="title" value="${c.title||''}" placeholder="Owner"></td>
+    <td><input class="outreach-input" data-field="email" value="${c.email||''}" placeholder="j@abc.com"></td>
+    <td><select class="outreach-input" data-field="channel"><option>cold-email</option><option>linkedin</option><option>referral</option><option>warm</option></select></td>
+    <td><select class="outreach-input" data-field="reply_status">${replyOptions}</select></td>
+    <td style="text-align:center;"><input type="checkbox" data-field="sample_sent" ${c.sample_sent?'checked':''}></td>
+    <td style="text-align:center;"><input type="checkbox" data-field="review_sold" ${c.review_sold?'checked':''}></td>
+    <td style="text-align:center;"><input type="checkbox" data-field="testimonial_received" ${c.testimonial_received?'checked':''}></td>
+    <td><input class="outreach-input" data-field="notes" value="${c.notes||''}" placeholder="Notes..."></td>
+    <td><button onclick="saveOutreachRow('${id}')" class="btn-primary btn-sm" style="white-space:nowrap;">Save</button></td>
+  </tr>`
+}
+
+function addOutreachRow() {
+  const tbody = document.getElementById('outreach-tbody')
+  const newRow = document.createElement('tbody')
+  newRow.innerHTML = outreachRow()
+  tbody.insertBefore(newRow.firstElementChild, tbody.firstElementChild)
+}
+
+async function saveOutreachRow(rowId) {
+  const row = document.getElementById('row-' + rowId)
+  const data = { id: rowId.startsWith('new-') ? undefined : rowId }
+  row.querySelectorAll('[data-field]').forEach(el => {
+    data[el.dataset.field] = el.type === 'checkbox' ? el.checked : el.value
+  })
+  try {
+    const result = await apiPost('save-outreach', data)
+    if (result.success) {
+      loadOutreach()
+    }
+  } catch(e) { alert('Failed to save') }
+}
+
+async function viewReview(id) {
+  const review = await apiGet('review', '&id=' + id)
+  const draft = review.ai_draft
+  const modal = document.getElementById('modal-content')
+  modal.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <div><div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:var(--gray-400);margin-bottom:4px;">Client</div><div style="font-weight:700;">${review.name} — ${review.company}</div><div style="color:var(--gray-600);font-size:0.85rem;">${review.email}</div></div>
+      <div><div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:var(--gray-400);margin-bottom:4px;">Review Details</div><div><span class="badge badge-navy" style="font-size:0.65rem;">${review.tier.toUpperCase()}</span> — $${review.price} — ${review.paid ? '✓ Paid' : '⚠ Unpaid'}</div><div style="color:var(--gray-600);font-size:0.85rem;">Deadline: ${review.deadline}</div></div>
+    </div>
+    ${draft ? `
+      <div style="background:${draft.score==='SAFE'?'#F0FDF4':draft.score==='NEGOTIATE'?'#FEF9EC':'#FEF2F2'};border:1.5px solid ${draft.score==='SAFE'?'#86EFAC':draft.score==='NEGOTIATE'?'#FCD34D':'#FCA5A5'};padding:14px 18px;border-radius:4px;margin-bottom:16px;">
+        <div style="font-weight:800;font-size:1.1rem;color:${draft.score==='SAFE'?'#166534':draft.score==='NEGOTIATE'?'#92400E':'#991B1B'};">${draft.score.replace('_',' ')}</div>
+        <div style="font-size:0.85rem;margin-top:4px;">${draft.score_reason}</div>
+      </div>
+      <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;">Top Traps (${draft.cashtrap_scan.length})</div>
+      ${draft.cashtrap_scan.slice(0,3).map(t => `
+        <div class="severity-${t.severity.toLowerCase()}" style="padding:10px;margin-bottom:8px;background:var(--gray-50);">
+          <span class="badge badge-${t.severity==='HIGH'?'red':t.severity==='MED'?'yellow':'gray'}" style="font-size:0.65rem;">${t.severity}</span>
+          <strong style="font-size:0.85rem;margin-left:8px;">${t.clause_ref}</strong>
+          <p style="margin:6px 0 0;font-size:0.82rem;color:var(--gray-600);">${t.plain_english}</p>
+        </div>`).join('')}
+      <div style="margin-top:16px;display:flex;gap:10px;">
+        <a href="/api/approve-review?id=${review.id}&token=${ADMIN_TOKEN}" target="_blank" class="btn-primary btn-sm">✓ Approve &amp; Send</a>
+        <button onclick="closeModal()" class="btn-outline btn-sm">Close</button>
+      </div>
+    ` : '<p style="color:var(--gray-400);">No AI draft generated yet. Status: ' + review.draft_status + '</p>'}
+    <div class="form-group" style="margin-top:20px;">
+      <label class="form-label">Internal Notes</label>
+      <textarea id="notes-editor" class="form-input" rows="3" style="resize:vertical;">${review.internal_notes || ''}</textarea>
+      <button onclick="saveNotes('${review.id}')" class="btn-outline btn-sm" style="margin-top:8px;">Save Notes</button>
+    </div>`
+  document.getElementById('review-modal').style.display = 'block'
+}
+
+async function saveNotes(id) {
+  await apiPost('update-review', { id, internal_notes: document.getElementById('notes-editor').value })
+  alert('Notes saved.')
+}
+
+function closeModal() {
+  document.getElementById('review-modal').style.display = 'none'
+}
+
+async function loadConfig() {
+  document.getElementById('config-loading').style.display = 'block'
+  try {
+    const config = await apiGet('config')
+    document.getElementById('config-loading').style.display = 'none'
+    document.getElementById('config-editor').style.display = 'block'
+    document.getElementById('prompt-editor').value = config.prompt
+  } catch(e) { document.getElementById('config-loading').textContent = 'Failed to load config.' }
+}
+
+async function savePrompt() {
+  const prompt = document.getElementById('prompt-editor').value
+  try {
+    await apiPost('update-prompt', { prompt_text: prompt })
+    document.getElementById('save-status').textContent = '✓ Saved at ' + new Date().toLocaleTimeString()
+    document.getElementById('save-status').style.color = 'var(--green-600)'
+  } catch(e) {
+    document.getElementById('save-status').textContent = '✗ Save failed'
+    document.getElementById('save-status').style.color = 'var(--red-600)'
+  }
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+  event.target.classList.add('active')
+  document.getElementById('tab-' + name).classList.add('active')
+  if (name === 'config') loadConfig()
+}
+
+// Auto-login if token in URL
+const urlToken = new URLSearchParams(window.location.search).get('token')
+if (urlToken) {
+  document.getElementById('admin-token-input').value = urlToken
+  authenticate()
+}
+</script>
+</body>
+</html>

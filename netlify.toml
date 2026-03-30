@@ -1,0 +1,36 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[dev]
+  command = "echo 'Static site'"
+  port = 8888
+  targetPort = 3000
+
+# Function-specific config
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["netlify/functions/lib/**"]
+
+# Scheduled function - runs daily at 2pm UTC (10am ET)
+[functions."send-sequence"]
+  schedule = "0 14 * * *"
+
+# Redirects: clean API paths
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# SPA-style: all unknown routes serve index
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = ["admin"]}
+
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "preview"

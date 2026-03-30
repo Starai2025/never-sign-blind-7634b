@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Checklist — Never Sign Blind™</title>
+  <meta name="description" content="Get the Subcontract Cash Trap Checklist™ — 7 fast questions to spot payment traps before you sign." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">NEVER SIGN BLIND<span>™</span></a>
+    <a href="intake.html" class="btn-primary btn-sm">Review My Deal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background:linear-gradient(160deg,#0F2044 0%,#1A3A6B 100%);padding:72px 20px;">
+  <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#F97316,#0D9E9E);"></div>
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+      <!-- Left: form -->
+      <div>
+        <span style="font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal-500);display:block;margin-bottom:10px;">FREE RESOURCE</span>
+        <h1 class="display" style="font-size:clamp(2rem,4vw,3.2rem);color:#fff;margin-bottom:16px;line-height:1.05;">Before You Sign,<br>Use This 1-Page Checklist</h1>
+        <p style="color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:28px;">7 fast questions that help small subcontractors spot payment traps, retainage traps, and risk-shifting language before signing. Takes less than 3 minutes to use.</p>
+
+        <div id="alert-success" class="alert alert-success" style="margin-bottom:16px;">✓ Check your inbox — checklist sent!</div>
+        <div id="alert-error" class="alert alert-error" style="margin-bottom:16px;">Something went wrong. Please try again.</div>
+
+        <!-- Form -->
+        <form id="checklist-form" style="display:flex;flex-direction:column;gap:12px;">
+          <input type="text" name="name" class="form-input" placeholder="Your Name" required style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;" />
+          <input type="email" name="email" class="form-input" placeholder="Your Email Address" required style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;" />
+          <input type="text" name="company" class="form-input" placeholder="Company Name (optional)" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;" />
+          <button type="submit" id="submit-btn" class="btn-primary btn-lg" style="width:100%;font-size:0.95rem;">
+            Send Me The Checklist Free →
+          </button>
+          <p style="color:rgba(255,255,255,0.4);font-size:0.72rem;text-align:center;margin:0;">No spam. One follow-up with a sample review. Unsubscribe anytime.</p>
+        </form>
+      </div>
+
+      <!-- Right: checklist preview -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:28px;border-radius:4px;">
+        <div class="display" style="color:var(--teal-500);font-size:1rem;letter-spacing:0.08em;margin-bottom:4px;">SUBCONTRACT CASH TRAP CHECKLIST™</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.72rem;margin-bottom:18px;">Never Sign Blind™ — Profit Protection for Subcontractors</div>
+        <div style="border-left:3px solid var(--teal-500);padding:10px 14px;margin-bottom:18px;">
+          <p style="font-size:0.85rem;color:rgba(255,255,255,0.85);font-weight:600;margin:0;">"Before you sign, ask these 7 questions. If you answer 'No' or 'Not sure' to any — do not sign blind."</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:rgba(255,255,255,0.06);border-radius:3px;">
+            <div style="width:15px;height:15px;border:1.5px solid var(--teal-500);flex-shrink:0;margin-top:2px;border-radius:2px;"></div>
+            <span style="font-size:0.82rem;color:rgba(255,255,255,0.85);">Is there a clear outside deadline for payment?</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:rgba(255,255,255,0.06);border-radius:3px;">
+            <div style="width:15px;height:15px;border:1.5px solid var(--teal-500);flex-shrink:0;margin-top:2px;border-radius:2px;"></div>
+            <span style="font-size:0.82rem;color:rgba(255,255,255,0.85);">Is retainage tied to your scope — not overall closeout?</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:rgba(255,255,255,0.06);border-radius:3px;">
+            <div style="width:15px;height:15px;border:1.5px solid var(--teal-500);flex-shrink:0;margin-top:2px;border-radius:2px;"></div>
+            <span style="font-size:0.82rem;color:rgba(255,255,255,0.85);">Can backcharges only come with notice and documentation?</span>
+          </div>
+          <!-- Blurred items -->
+          <div style="position:relative;margin-top:4px;">
+            <div style="filter:blur(3px);opacity:0.4;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:rgba(255,255,255,0.06);border-radius:3px;">
+                <div style="width:15px;height:15px;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0;border-radius:2px;"></div>
+                <span style="font-size:0.82rem;color:rgba(255,255,255,0.6);">Are notice deadlines for extra work realistic in the field?</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:rgba(255,255,255,0.06);border-radius:3px;">
+                <div style="width:15px;height:15px;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0;border-radius:2px;"></div>
+                <span style="font-size:0.82rem;color:rgba(255,255,255,0.6);">Are liquidated damages capped and tied to your actual scope?</span>
+              </div>
+            </div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+              <span class="badge badge-teal" style="font-size:0.7rem;padding:5px 14px;">+ 4 More — Get The Free Checklist</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UPSELL CTA -->
+<section class="section section-alt" style="text-align:center;">
+  <div class="container" style="max-width:620px;">
+    <div class="display" style="color:var(--teal-500);font-size:1.2rem;margin-bottom:12px;">READY FOR THE FULL REVIEW?</div>
+    <p style="color:var(--gray-600);line-height:1.7;margin-bottom:24px;">If you have a subcontract on your desk right now, don't stop at the checklist. Send it over and we'll show you exactly where the money can get stuck and what to push back on today.</p>
+    <a href="intake.html" class="btn-primary btn-lg">Review My Deal Before I Sign</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">NEVER SIGN BLIND<span>™</span></div>
+    <div style="color:var(--gray-400);font-size:0.72rem;">Not legal advice. © 2025 Never Sign Blind™</div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('checklist-form').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const btn = document.getElementById('submit-btn')
+    btn.innerHTML = '<span class="spinner"></span> Sending...'
+    btn.disabled = true
+    const data = {
+      name: e.target.name.value,
+      email: e.target.email.value,
+      company: e.target.company.value
+    }
+    try {
+      const res = await fetch('/api/capture-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      const result = await res.json()
+      if (res.ok && result.success) {
+        document.getElementById('alert-success').classList.add('visible')
+        // If testing mode, show preview URL
+        if (result.previewUrl) {
+          document.getElementById('alert-success').innerHTML = '✓ Sent! <a href="' + result.previewUrl + '" target="_blank" style="color:var(--green-600);font-weight:700;">Preview email →</a>'
+        }
+        e.target.reset()
+        setTimeout(() => window.location.href = 'thank-you-checklist.html', 2000)
+      } else {
+        throw new Error(result.error || 'Failed')
+      }
+    } catch (err) {
+      document.getElementById('alert-error').classList.add('visible')
+      btn.innerHTML = 'Send Me The Checklist Free →'
+      btn.disabled = false
+    }
+  })
+</script>
+</body>
+</html>
